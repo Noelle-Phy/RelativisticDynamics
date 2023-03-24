@@ -1,0 +1,109 @@
+import numpy as np
+import statistics
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+with open("Na22Mod.Txt") as f:
+    Na22 = np.loadtxt((x.replace(':',' ') for x in f), dtype = float)
+with open("Mn54Mod.Txt") as f:
+    Mn54 = np.loadtxt((x.replace(':',' ') for x in f), dtype = float)
+with open("Cs137Mod.Txt") as f:
+    Cs137 = np.loadtxt((x.replace(':',' ') for x in f), dtype = float)
+with open("Ba133Mod.Txt") as f:
+    Ba133 = np.loadtxt((x.replace(':',' ') for x in f), dtype = float)
+with open("Cd109Mod.Txt") as f:
+    Cd109 = np.loadtxt((x.replace(':',' ') for x in f), dtype = float)
+with open("Co57Mod.Txt") as f:
+    Co57 = np.loadtxt((x.replace(':',' ') for x in f), dtype = float)
+
+E1 = []
+GNa = []
+E2 = []
+GMn = []
+E3 = []
+GCs = []
+E4 = []
+GBa = []
+E5 = []
+GCd = []
+E6 = []
+GCo = []
+for i in range(len(Na22)):
+    E1 = np.append(E1, Na22[i][0])
+    GNa = np.append(GNa, Na22[i][1])
+    E2 = np.append(E2, Mn54[i][0])
+    GMn = np.append(GMn, Mn54[i][1])
+    E3 = np.append(E3, Cs137[i][0])
+    GCs = np.append(GCs, Cs137[i][1])
+    E4 = np.append(E4, Ba133[i][0])
+    GBa = np.append(GBa, Ba133[i][1])
+    E5 = np.append(E5, Cd109[i][0])
+    GCd = np.append(GCd, Cd109[i][1])
+    E6 = np.append(E6, Co57[i][0])
+    GCo = np.append(GCo, Co57[i][1])
+
+plt.plot(E1, GNa, label = "Na22")
+plt.xlabel("Energy")
+plt.ylabel("Counts")
+plt.title("Na22")
+plt.savefig("Na22")
+plt.show()
+plt.close()
+
+plt.plot(E2, GMn, label = "Mn54")
+plt.xlabel("Energy")
+plt.ylabel("Counts")
+plt.title("Mn54")
+plt.savefig("Mn54")
+plt.show()
+plt.close()
+
+plt.plot(E3, GCs, label = "Cs137")
+plt.xlabel("Energy")
+plt.ylabel("Counts")
+plt.title("Cs137")
+plt.savefig("Cs137")
+plt.show()
+plt.close()
+
+plt.plot(E4, GBa, label = "Ba133")
+plt.xlabel("Energy")
+plt.ylabel("Counts")
+plt.title("Ba133")
+plt.show()
+plt.close()
+
+plt.plot(E5, GCd, label = "Cd109")
+plt.xlabel("Energy")
+plt.ylabel("Counts")
+plt.title("Cd109")
+plt.show()
+plt.close()
+
+plt.plot(E6, GCo, label = "Co57")
+plt.xlabel("Energy")
+plt.ylabel("Counts")
+plt.title("Co57")
+plt.show()
+plt.close()
+
+K = [5.61 * (10 ** -14), 1.72 * (10 ** -13), 8.01 * (10 ** -14), 1.05 * (10 ** -13)]
+p = [3.90 * (10 ** -22), 8.14 * (10 ** -22), 4.67 * (10 ** -22), 5.70 * (10 ** -22)]
+Kclass = [8.36 * (10 **-14), 3.62 * (10 ** -13), 1.20 * (10 ** -13), 1.79 * (10 ** -13)]
+Krelat = [6.15 * (10 ** -14), 1.75 * (10 ** -13), 8.06 * (10 ** -14), 1.08 * (10 ** -13)]
+def rel(p):
+    K = np.sqrt(((p ** 2) * (299792458 ** 2)) + (((9.11 * (10 ** -31)) ** 2) * (299792458 ** 4))) - (9.11 * (10 ** -31) * (299792458 ** 2))
+    return K
+def clas(p):
+    K = (p ** 2)/(2 * (9.11 * (10 ** -31)))
+    return K
+pval = np.linspace(0, (1 * (10 **-21)), 1000)
+plt.plot(pval, rel(pval), color = 'black', label = 'Relativistic Prediction')
+plt.plot (pval, clas(pval), color = 'red', label = 'Classical Prediction')
+plt.scatter(p, K, color = 'gray', label = 'Measurements')
+plt.legend()
+plt.xlabel("Momentum (Kg m/s)")
+plt.ylabel("Energy (J)")
+plt.savefig("Energy_as_a_function_of_momentum_with_relativistic_and_classical_predictions")
+plt.show()
+plt.close()
